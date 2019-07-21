@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<arquillian xmlns="http://jboss.org/schema/arquillian"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://jboss.org/schema/arquillian
+        http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+    <container qualifier="jbossas-managed" default="true">
+        <configuration>
+            <!-- By default, arquillian will use the JBOSS_HOME environment variable. -->
+            <property name="jbossHome">./build/wildfly-12.0.0.Final</property>
+            <property name="serverConfig">standalone-zoo-tester.xml</property>
+            <!-- <property name="managementAddress">127.0.0.1</property>
+            <property name="managementPort">10091</property>
+            <property name="startupTimeoutInSeconds">30</property>-->
+            <!-- <property name="stopTimeoutInSeconds">450</property> -->
+            <property name="javaVmArguments">-Xmx1024m -XX:-UseConcMarkSweepGC</property>
+            <!--            <property name="javaVmArguments">-Xms256m -Xmx1024m -Djboss.socket.binding.port-offset=100</property>-->
+            <!-- uncomment below for debugging -->
+            <property name="javaVmArguments">-Xms256m -Xmx512m -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8787</property>
+        </configuration>
+    </container>
+
+</arquillian>

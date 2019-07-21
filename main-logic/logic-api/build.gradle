@@ -1,0 +1,8 @@
+dependencies {
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.3'
+
+    testCompile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.3.7.Final'
+    testCompile group: 'log4j', name: 'log4j', version: '1.2.17'
+}
+

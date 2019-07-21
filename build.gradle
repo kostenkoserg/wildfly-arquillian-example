@@ -1,0 +1,90 @@
+apply plugin: 'java'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+//allprojects {
+//    task hello << { task -> println "I'm $task.project.name" }
+//}
+
+defaultTasks 'clean', 'build'
+
+subprojects {
+    ext.libraryVersions = [
+            javaee                  : '8.0',
+            wildfly                 : '14.0.1.Final',
+            junit                   : '4.11',
+            arquillian              : '1.1.8.Final',
+            shrinkWrapResolverGradle: '2.2.0-beta-1'
+    ]
+
+    apply plugin: 'java'
+    group = 'com.fasto'
+    version = '0.1'
+    defaultTasks 'clean', 'build'
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        compile(
+                ['log4j:log4j:1.2.17'],
+                ['commons-logging:commons-logging:1.2'],
+                [group: 'org.apache.commons', name: 'commons-lang3', version: '3.4']
+        )
+        compile 'javax:javaee-api:8.0'
+
+        testCompile group: 'junit', name: 'junit', version: '4.+'
+        testCompile 'org.mockito:mockito-all:1.8.4'
+        testCompile 'org.apache.commons:commons-lang3:3.4'
+    }
+
+}
+
+task run() {
+    dependsOn 'zoo-tester:copyServerConfigurationMysql'
+    doLast {
+        String deployDir = project(':zoo-tester').projectDir.toString() + "/build/wildfly-14.0.1.Final/standalone/deployments"
+        
+        copy {
+            from project(':admin-endpoint').projectDir.toString() + "/build/libs/admin-endpoint-0.1.war"
+            into deployDir
+        }
+        copy {
+            from project(':datamanager:datamanager-core').projectDir.toString() + "/build/libs/datamanager-core-0.1.ear"
+            into deployDir
+        }
+        copy {
+            from project(':wallet:wallet-core').projectDir.toString() + "/build/libs/wallet-core-0.1.ear"
+            into deployDir
+        }
+        copy {
+            from project(':mockups:mock-tradier').projectDir.toString() + "/build/libs/mock-tradier-0.1.war"
+            into deployDir
+        }
+        copy {
+            from project(':player-endpoint').projectDir.toString() + "/build/libs/player-endpoint-0.1.war"
+            into deployDir
+        }
+        copy {
+            from project(':quotes-provider:quotes-provider-core').projectDir.toString() + "/build/libs/quotes-provider-core-0.1.ear"
+            into deployDir
+        }
+        copy {
+            from project(':tournament:tournament-core').projectDir.toString() + "/build/libs/tournament-core-0.1.ear"
+            into deployDir
+        }
+        exec {
+            println 'Starting Wildfly...'
+            workingDir = file(project(':zoo-tester').projectDir)
+            if(org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+                commandLine "cmd", '/C', 'start', '.\\build\\wildfly-14.0.1.Final\\bin\\standalone.bat',  "--debug", "5005", "-c=standalone-fasto-14.xml"
+            } else{
+                        commandLine "./build/wildfly-14.0.1.Final/bin/standalone.sh", "--debug", "5005", '-c=standalone-fasto-14.xml'
+            }
+            ext.output = {
+                return standardOutput.toString()
+            }
+        }
+    }
+}

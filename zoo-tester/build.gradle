@@ -1,0 +1,82 @@
+
+// Integration tests Structure
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integration-test/java')
+        }
+        resources.srcDir file('src/integration-test/resources')
+    }
+}
+
+configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+    wildfly
+}
+
+dependencies {
+    
+    wildfly "org.wildfly:wildfly-dist:${libraryVersions.wildfly}@zip"
+    
+    compile project(':quotes-provider:quotes-provider-api')
+    compile project(':commons')
+    
+    compile 'org.jboss.logmanager:jboss-logmanager:1.5.2.Final'
+    compile "org.jboss.arquillian.junit:arquillian-junit-container:${libraryVersions.arquillian}"
+    compile "org.jboss.arquillian.protocol:arquillian-protocol-servlet:${libraryVersions.arquillian}"
+    compile "org.wildfly:wildfly-arquillian-container-managed:8.2.1.Final"
+    compile "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-gradle-depchain:${libraryVersions.shrinkWrapResolverGradle}"   
+    compile "org.jboss.arquillian.container:arquillian-container-spi:${libraryVersions.arquillian}"
+    compile 'com.codahale.metrics:metrics-core:3.0.2'
+    //    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+
+    //Integration tests
+    testCompile "junit:junit:${libraryVersions.junit}"
+    testCompile "org.jboss.arquillian.junit:arquillian-junit-container:${libraryVersions.arquillian}"
+    testCompile "org.jboss.arquillian.protocol:arquillian-protocol-servlet:${libraryVersions.arquillian}"
+    testCompile "org.wildfly:wildfly-arquillian-container-managed:8.2.1.Final"
+    testCompile "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-gradle-depchain:${libraryVersions.shrinkWrapResolverGradle}"   
+    testCompile "org.jboss.arquillian.container:arquillian-container-spi:${libraryVersions.arquillian}"
+}
+// remove wildfly from build directory
+task removeWildfly(type:Delete) {
+    delete "build/wildfly-${libraryVersions.wildfly}"
+}
+
+// unzip wildfly to the build directory
+task resolveWildfly(type:Copy, dependsOn:removeWildfly) {
+    destinationDir = buildDir
+    from {zipTree(configurations.wildfly.singleFile)}
+}
+
+//setup necessary modules to the server
+task setupModules(type:Copy, dependsOn:resolveWildfly) {
+    destinationDir = file("build/wildfly-${libraryVersions.wildfly}/modules/")
+    from  zipTree ("src/integration-test/resources/modules.zip")
+}
+
+
+// copy configuration to the server
+task copyServerConfigurationH2(type:Copy, dependsOn:setupModules) {
+    from "src/integration-test/resources/standalone-zoo-tester.xml"
+    into "build/wildfly-${libraryVersions.wildfly}/standalone/configuration"
+}
+
+task copyServerConfigurationMysql(type:Copy, dependsOn:setupModules) {
+    from "src/integration-test/resources/standalone-fasto-14.xml"
+    into "build/wildfly-${libraryVersions.wildfly}/standalone/configuration"
+}
+
+task integrationTest(type: Test) {
+    
+    dependsOn 'removeWildfly'
+    dependsOn 'resolveWildfly'
+    dependsOn 'setupModules'
+    dependsOn 'copyServerConfigurationH2'
+
+    //testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}

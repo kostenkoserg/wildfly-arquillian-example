@@ -1,0 +1,34 @@
+apply plugin: 'war'
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+    test {
+        java {
+            srcDir 'src/test/java'
+        }
+        resources {
+            srcDir 'src/test/resources'
+        }
+    }
+}
+
+dependencies {
+
+    compile project(':datamanager:datamanager-api')
+    //compile project(':commons')
+    
+    providedCompile 'log4j:log4j:1.2.17'
+    providedCompile 'commons-logging:commons-logging:1.2'
+    providedCompile 'javax:javaee-api:7.0'
+    providedCompile 'com.fasterxml.jackson.core:jackson-databind:2.7.5'
+
+    testCompile 'junit:junit:4.12'
+    testCompile group: 'log4j', name: 'log4j', version: '1.2.17'
+}

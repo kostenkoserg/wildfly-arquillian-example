@@ -1,0 +1,5 @@
+rootProject.name = 'wildfly-arquillian-example'
+
+include 'controller'
+include 'main-logic:logic-api', 'main-logic:logic-core'
+include 'zoo-tester'
