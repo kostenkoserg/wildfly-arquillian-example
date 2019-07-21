@@ -10,7 +10,6 @@ import com.fasto.admin.model.TournamentTemplate;
 import com.fasto.admin.security.Secured;
 import com.fasto.datamanager.SlateService;
 import com.fasto.datamanager.StockService;
-import com.fasto.datamanager.TournamentService;
 import com.fasto.datamanager.dto.PayOutDetailsDto;
 import com.fasto.datamanager.dto.PayOutDto;
 import com.fasto.datamanager.dto.SlateDto;
@@ -35,6 +34,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.kostenko.examples.wildflyarquillian.TestService;
 
 /**
  * @author kostenko
@@ -46,8 +46,8 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class TournamentEndpoint {
 
-    @EJB(lookup = TournamentService.TOURNAMENT_SERVICE_JNDI)
-    TournamentService tournamentService;
+    @EJB(lookup = TestService.TOURNAMENT_SERVICE_JNDI)
+    TestService tournamentService;
 
     @EJB(lookup = SlateService.SLATE_SERVICE_JNDI_NAME)
     SlateService slateService;

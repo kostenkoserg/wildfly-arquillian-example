@@ -1,15 +1,4 @@
 
-// Integration tests Structure
-sourceSets {
-    integrationTest {
-        java {
-            compileClasspath += main.output + test.output
-            runtimeClasspath += main.output + test.output
-            srcDir file('src/integration-test/java')
-        }
-        resources.srcDir file('src/integration-test/resources')
-    }
-}
 
 configurations {
     integrationTestCompile.extendsFrom testCompile
@@ -18,12 +7,7 @@ configurations {
 }
 
 dependencies {
-    
     wildfly "org.wildfly:wildfly-dist:${libraryVersions.wildfly}@zip"
-    
-    compile project(':quotes-provider:quotes-provider-api')
-    compile project(':commons')
-    
     compile 'org.jboss.logmanager:jboss-logmanager:1.5.2.Final'
     compile "org.jboss.arquillian.junit:arquillian-junit-container:${libraryVersions.arquillian}"
     compile "org.jboss.arquillian.protocol:arquillian-protocol-servlet:${libraryVersions.arquillian}"
@@ -31,7 +15,6 @@ dependencies {
     compile "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-gradle-depchain:${libraryVersions.shrinkWrapResolverGradle}"   
     compile "org.jboss.arquillian.container:arquillian-container-spi:${libraryVersions.arquillian}"
     compile 'com.codahale.metrics:metrics-core:3.0.2'
-    //    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
 
     //Integration tests
     testCompile "junit:junit:${libraryVersions.junit}"

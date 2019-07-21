@@ -1,15 +1,9 @@
 apply plugin: 'ear'
 
 dependencies {
-    compile project(':datamanager:datamanager-api')
-    compile project(':commons')
-    compile project(":tournament:tournament-core")
-    deploy project(path:':datamanager:datamanager-core')
-    add ('earlib', project(':datamanager:datamanager-api')) { transitive = false }
-    add ('earlib', project(':commons')) { transitive = false }
-    add ('earlib', "javax:javaee-api:7.0") { transitive = false }
-    add ('earlib', project(":tournament:tournament-core")) { transitive = false }
-    add ('earlib', project(':wallet:wallet-api')) { transitive = false }
+    compile project(':main-logic:logic-api')
+    deploy project(path:':main-logic:logic-core')
+    add ('earlib', project(':main-logic:logic-api')) { transitive = false }
     testCompile group: 'org.hsqldb', name: 'hsqldb', version: '2.3.2'
     testCompile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.3.7.Final'
     testCompile group: 'log4j', name: 'log4j', version: '1.2.17'
@@ -18,7 +12,7 @@ dependencies {
 ear {
     excludes = ["com", "META-INF"]
     deploymentDescriptor {
-        applicationName = "datamanager"
+        applicationName = "main-logic"
         initializeInOrder = false
         displayName = "datamanager"
         description = "datamanager application"
