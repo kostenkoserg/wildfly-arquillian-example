@@ -37,7 +37,7 @@ task resolveWildfly(type:Copy, dependsOn:removeWildfly) {
 
 //setup necessary modules to the server
 task setupModules(type:Copy, dependsOn:resolveWildfly) {
-    destinationDir = file("build/wildfly-${libraryVersions.wildfly}/modules/")
+    destinationDir = file("build/wildfly-${libraryVersions.wildfly}/modules/")1
     from  zipTree ("src/integration-test/resources/modules.zip")
 }
 

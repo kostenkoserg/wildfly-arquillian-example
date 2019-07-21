@@ -44,7 +44,7 @@ import org.kostenko.examples.wildflyarquillian.TestService;
 @Stateless
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class TournamentEndpoint {
+public class TestEndpoint {
 
     @EJB(lookup = TestService.TOURNAMENT_SERVICE_JNDI)
     TestService tournamentService;
